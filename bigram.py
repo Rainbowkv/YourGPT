@@ -2,20 +2,23 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-# 训练、预测设置
+# 训练、评估、预测设置
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"device = {device}")
 torch.manual_seed(1337)
+if device == "cuda":
+    torch.cuda.manual_seed(47)
 train_data_proportion = 0.9
-batch_size = 32
+batch_size = 1024
 block_size = 8
 iterations = 7000
+eval_interval = 300
+eval_iters = 200
 max_tokens = 500
-
 # 超参数设置
 learning_rate = 1e-3
-
 # ------------------------------------------------------
+
 # 加载数据集
 input_file_path = "input.txt"
 with open(input_file_path, 'r', encoding='utf-8') as f:
@@ -43,6 +46,21 @@ def get_batch(split):
     x = torch.stack([data[i:i + block_size] for i in ix])
     y = torch.stack([data[i + 1:i + block_size + 1] for i in ix])
     return x.to(device), y.to(device)
+
+
+@torch.no_grad()
+def estimate_loss():
+    out = {}
+    model.eval()
+    for split in ["train", "eval"]:
+        losses = torch.zeros(eval_iters)
+        for k in range(eval_iters):
+            x, y = get_batch(split)
+            _, loss = model(x, y)
+            losses[k] = loss.item()
+        out[split] = losses.mean()
+    model.train()
+    return out
 
 
 # 模型结构（模型 = 结构 + 参数）
@@ -77,12 +95,20 @@ model = BigramLanguageModel(vocab_size).to(device)  # 模型实例
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)  # 优化器实例（梯度下降策略，不计算梯度，依赖loss.backward()计算的梯度值）
 
 # 训练
-for steps in range(iterations):
+for cur_iter in range(iterations):
+    if cur_iter % eval_interval == 0:
+        all_loss = estimate_loss()
+        print(f"cur_iter = {cur_iter}, train_loss = {all_loss['train']}, val_loss = {all_loss['eval']}")
     xb, yb = get_batch("train")
     logits, loss = model(xb, yb)
     optimizer.zero_grad(set_to_none=True)
     loss.backward()
     optimizer.step()
 
+print(loss)
 # 预测
 print(decoder(model.generate(torch.zeros((1, 1), dtype=torch.long, device=device), 500)[0].tolist()))
+# 仅保存模型参数
+torch.save(model.state_dict(), "bigramModel.pth")
+print("模型保存成功")
+
