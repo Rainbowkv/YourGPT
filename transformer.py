@@ -188,5 +188,5 @@ print(loss)
 # 预测
 print(decoder(model.generate(torch.zeros((1, 1), dtype=torch.long, device=device), 500)[0].tolist()))
 # 仅保存模型参数
-# torch.save(model.state_dict(), "transformerModel.pth")
-# print("模型保存成功")
+torch.save(model.state_dict(), "single_sa_ffwd_Model.pth")
+print("模型保存成功")
