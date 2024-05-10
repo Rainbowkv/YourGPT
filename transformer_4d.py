@@ -183,6 +183,10 @@ class TransformerModel(nn.Module):
 
 
 model = TransformerModel().to(device)  # 模型实例
+# 计算参数数量
+total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+print(f"模型参数量：{total_params}.")
+print(f"训练设备：device={device}")
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)  # 优化器实例（梯度下降策略，不计算梯度，依赖loss.backward()计算的梯度值）
 
 start_time = time.time()

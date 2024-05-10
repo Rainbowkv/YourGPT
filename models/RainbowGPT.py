@@ -27,7 +27,7 @@ class RainbowGPT(nn.Module):
         X = self.transformer.blocks(X)
         X = self.transformer.ln_f(X)
 
-        logits = self.lm_head(X)  # (B, T, n_embd)->(B, T, vocab_size)
+        logits = self.transformer.lm_head(X)  # (B, T, n_embd)->(B, T, vocab_size)
 
         if target is None:
             loss = None
