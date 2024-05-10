@@ -17,7 +17,7 @@ eval_iters = 200
 max_tokens = 500
 # 超参数设置
 learning_rate = 1e-3
-n_blocks = 1
+n_blocks = 3
 # ------------------------------------------------------
 
 # 加载数据集
@@ -99,9 +99,12 @@ class MultiHead(nn.Module):
     def __init__(self, num_heads, head_size):
         super().__init__()
         self.heads = nn.ModuleList([AttentionHead(head_size) for _ in range(num_heads)])
+        self.proj = nn.Linear(n_embd, n_embd, bias=False)  # 投影回残差路径的层
 
     def forward(self, X):  # (B, T, C) -> (B, T, C)
-        return torch.cat([h(X) for h in self.heads], dim=-1)
+        OUT = torch.cat([h(X) for h in self.heads], dim=-1)
+        OUT = self.proj(OUT)
+        return OUT
 
 
 class FeedForward(nn.Module):
@@ -109,8 +112,9 @@ class FeedForward(nn.Module):
     def __init__(self):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(n_embd, n_embd, bias=False),
-            nn.ReLU()
+            nn.Linear(n_embd, 4 * n_embd, bias=False),  # 这里本来是n_embd, n_embd，这里是为了复现A I A Y N论文
+            nn.ReLU(),
+            nn.Linear(4 * n_embd, n_embd, bias=False)  # 投影回残差路径的层
         )
 
     def forward(self, X):
@@ -125,8 +129,8 @@ class Block(nn.Module):
         self.ffwd = FeedForward()
 
     def forward(self, X):
-        X = self.sa(X)
-        X = self.ffwd(X)
+        X = X + self.sa(X)  # 加入残差路径进行优化
+        X = X + self.ffwd(X)
         return X
 
 
@@ -188,5 +192,5 @@ print(loss)
 # 预测
 print(decoder(model.generate(torch.zeros((1, 1), dtype=torch.long, device=device), 500)[0].tolist()))
 # 仅保存模型参数
-torch.save(model.state_dict(), "single_sa_ffwd_Model.pth")
+torch.save(model.state_dict(), "trisa_ffwd_res_Model.pth")
 print("模型保存成功")
