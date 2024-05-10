@@ -1,0 +1,89 @@
+self.key = nn.Linear(n_embd, self.head_size, bias=False)
+self.query = nn.Linear(n_embd, self.head_size, bias=False)
+self.value = nn.Linear(n_embd, self.head_size, bias=False)写法：
+cur_iter = 5000, train_loss = 2.0125627517700195, val_loss = 2.1013147830963135
+tensor(1.9132, device='cuda:0', grad_fn=<NllLossBackward0>)
+
+Uposat so a worth my are ale youse alose but a save.
+Whobs
+I buppors mastantunce,
+Now Roman ten doth trowel omatwer is lord! Grow!
+
+QUET,
+What in not
+I see seaciour death
+That in rut prayine oich: your disel,
+Yow to hagc here up ceed hat's wow the I
+dead my this upon on.
+
+KING RICHARD:
+In whald in beid, and at wisglestace.
+
+FFOLELT:
+Fo like eided?
+
+ISTIABER:
+Rith dave love arother the hear yenou, and in know not my in the him.
+
+FLORIH:
+And would, his witle,
+Wilk aling hone efore hearsure.
+
+HENTI
+
+
+self.attn = nn.Linear(n_embd, self.head_size * 3, bias=False)写法：
+cur_iter = 5000, train_loss = 2.0150094032287598, val_loss = 2.103727340698242
+tensor(1.9205, device='cuda:0', grad_fn=<NllLossBackward0>)
+训练耗时：151.41161441802979 s
+
+UF Bates wand: them warl and youse almenot you!s hap seabs
+I bupporn mastant cromittars,
+On ten dother
+I for?
+
+KING RAURIZABET:
+Norse be,
+ive evingden I fore a some death
+That in rut praying oich: your disel,
+You to happpefter
+Ond you not in in the stear my in kness' on so thim of beath a with him beid, and at wis lictace.
+
+FROMENTIR:
+Wirce eid doyou farites ting dave love say think the must
+To onance: To rion in this with in me to banoungs much, his witle,
+Wilk all greanate creing, our may me g
+
+
+transformer_op.py并行处理所有头的写法：
+cur_iter = 5000, train_loss = 2.0150809288024902, val_loss = 2.1078712940216064
+tensor(1.9880, device='cuda:0', grad_fn=<NllLossBackward0>)
+训练耗时：81.58005666732788 s
+
+UFIO:
+You ad of dureward.
+
+GRYCHARD III:
+Alama! and.
+Whobsher's wirn mast! to comity wour knone do lost welt?
+
+KING RIARIOLANGET:
+As that
+in fevinnds
+Is felffacios and the maysiger uansty.
+
+HEMA:
+Hering is the cinte happsef all deed'd.
+
+CUKE MINIUS:
+That my this fear on se that of be confeen manine, in in;
+At light there thou love hith liolfes;
+Gonought.
+
+As tis's a mert.
+Have thinkmy head your of name of rispon my mist; shim.
+
+FLORD:
+I have our the fearotugine, alientellayefore:
+If ouremance:
+I

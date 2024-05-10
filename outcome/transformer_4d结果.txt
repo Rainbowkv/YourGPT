@@ -1,0 +1,43 @@
+# 超参数设置
+batch_size = 64
+block_size = 256
+n_embd = 384
+num_heads = 6
+iterations = 5000
+eval_interval = 500
+eval_iters = 200
+max_tokens = 500
+learning_rate = 3e-4
+n_blocks = 3
+dropout = 0.2  # 正则化
+
+结果：
+cur_iter = 0, train_loss = 4.276867389678955, val_loss = 4.272336006164551
+cur_iter = 500, train_loss = 2.144163131713867, val_loss = 2.193248987197876
+cur_iter = 1000, train_loss = 1.7398993968963623, val_loss = 1.8905748128890991
+cur_iter = 1500, train_loss = 1.5569370985031128, val_loss = 1.742240309715271
+cur_iter = 2000, train_loss = 1.4533944129943848, val_loss = 1.6477208137512207
+cur_iter = 2500, train_loss = 1.3896136283874512, val_loss = 1.6069587469100952
+cur_iter = 3000, train_loss = 1.3401293754577637, val_loss = 1.5640323162078857
+cur_iter = 3500, train_loss = 1.3072075843811035, val_loss = 1.536150336265564
+cur_iter = 4000, train_loss = 1.2758785486221313, val_loss = 1.5271245241165161
+cur_iter = 4500, train_loss = 1.2529857158660889, val_loss = 1.5134031772613525
+cur_iter = 5000, train_loss = 1.2280710935592651, val_loss = 1.4994676113128662
+tensor(1.3014, device='cuda:0', grad_fn=<NllLossBackward0>)
+训练耗时：3083.1616497039795 s
+
+CEDWAMUS:
+It a gody of mine, wherein eyes;
+bite gracious you.
+
+DUKE VINCENTIO:
+Yes, ask he will go bid your faithful dry,
+That wenty holding your humbly very love,
+Since of my bapdate!
+Another the way, ere strise, subject with your dired.
+Undeed him; I what I shall now your rustier
+As I did I bleft me; land him lay is an
+penity appear, lord again: but why will bear you pray you, ye
+the protect you, give groose hangedit provokweps
+dangerouse off your brother's condudier,
+by that evacious day, if 
