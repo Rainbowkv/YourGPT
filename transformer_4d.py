@@ -11,16 +11,16 @@ if device == "cuda":
     torch.cuda.manual_seed(47)
 train_data_proportion = 0.9
 # 超参数设置
-batch_size = 64
+batch_size = 256
 block_size = 256
-n_embd = 384
+n_embd = 768
 num_heads = 6
 iterations = 5000
 eval_interval = 500
 eval_iters = 200
 max_tokens = 500
 learning_rate = 3e-4
-n_blocks = 3
+n_blocks = 24
 dropout = 0.2  # 正则化
 # ------------------------------------------------------
 

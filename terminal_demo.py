@@ -10,7 +10,7 @@ from models.RainbowGPT import RainbowGPT
 # torch.manual_seed(1337)
 
 # 从文件加载i2s字典
-with open('tokenizer/i2s_tokenizer.json', 'r', encoding='utf-8') as f:
+with open('tokenizer/en_i2s_tokenizer.json', 'r', encoding='utf-8') as f:
     i2s = json.load(f)
 
 decoder = lambda nums: "".join([i2s[str(num)] for num in nums]) if isinstance(nums, list) else i2s[str(nums)]
