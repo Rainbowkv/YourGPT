@@ -1,9 +1,11 @@
-from dataclasses import dataclass
 import torch
 import torch.nn as nn
 from models.RainbowGPT import RainbowGPT
+
+from dataclasses import dataclass
 import time
 from datetime import datetime
+from tqdm import tqdm
 
 torch.manual_seed(1337)
 
@@ -83,8 +85,9 @@ print(f"训练设备：device={GPTConfig.device}")
 optimizer = torch.optim.AdamW(model.parameters(),
                               lr=GPTConfig.learning_rate)  # 优化器实例（梯度下降策略，不计算梯度，依赖loss.backward()计算的梯度值）
 start_time = time.time()
+
 # 训练
-for cur_iter in range(GPTConfig.iterations + 1):
+for cur_iter in tqdm(range(GPTConfig.iterations + 1), desc="Trainning"):
     if cur_iter % GPTConfig.eval_interval == 0:
         all_loss = estimate_loss()
         print(f"cur_iter = {cur_iter}, train_loss = {all_loss['train']}, val_loss = {all_loss['eval']}")

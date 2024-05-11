@@ -1,7 +1,9 @@
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+
 import time
+from tqdm import tqdm
 
 # 训练、评估、预测设置
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -11,16 +13,16 @@ if device == "cuda":
     torch.cuda.manual_seed(47)
 train_data_proportion = 0.9
 # 超参数设置
-batch_size = 256
+batch_size = 64
 block_size = 256
-n_embd = 768
+n_embd = 384
 num_heads = 6
 iterations = 5000
 eval_interval = 500
 eval_iters = 200
 max_tokens = 500
 learning_rate = 3e-4
-n_blocks = 24
+n_blocks = 6
 dropout = 0.2  # 正则化
 # ------------------------------------------------------
 
@@ -191,7 +193,7 @@ optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)  # 优化器
 
 start_time = time.time()
 # 训练
-for cur_iter in range(iterations + 1):
+for cur_iter in tqdm(range(iterations + 1), desc="Trainning"):
     if cur_iter % eval_interval == 0:
         all_loss = estimate_loss()
         print(f"cur_iter = {cur_iter}, train_loss = {all_loss['train']}, val_loss = {all_loss['eval']}")
@@ -204,6 +206,6 @@ for cur_iter in range(iterations + 1):
 print(f"训练耗时：{time.time()-start_time} s")
 # 预测
 print(decoder(model.generate(torch.zeros((1, 1), dtype=torch.long, device=device), 500)[0].tolist()))
-# 仅保存模型参数
-torch.save(model.state_dict(), "trisa_ffwd_res_layerNorm_Model.pth")
-print("模型保存成功")
+# # 仅保存模型参数
+# torch.save(model.state_dict(), "trisa_ffwd_res_layerNorm_Model.pth")
+# print("模型保存成功")
