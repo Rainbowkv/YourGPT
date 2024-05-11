@@ -3,6 +3,8 @@ import torch.nn as nn
 from torch.nn import functional as F
 from models.Block import Block
 
+from tqdm import tqdm
+
 
 class RainbowGPT(nn.Module):
 
@@ -39,7 +41,7 @@ class RainbowGPT(nn.Module):
         return logits, loss
 
     def generate(self, idx, max_tokens):
-        for _ in range(max_tokens):
+        for _ in tqdm(range(max_tokens), desc="Generating text"):
             # 有位置嵌入表后，输入的长度必须限制，否则查表会越界。ps:刚好可以输入最大值的上下文长度block，而不是block-1
             content = idx[:, -self.config.block_size:]
             logits, loss = self(content)

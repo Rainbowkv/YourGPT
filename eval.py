@@ -4,9 +4,10 @@ import torch.nn as nn
 
 from models.TransformerModel import TransformerModel
 
-# from models.RainbowGPT import RainbowGPT
+from models.RainbowGPT import RainbowGPT
 
 torch.manual_seed(1337)
+
 
 # 加载数据集
 input_file_path = "data/input.txt"
@@ -35,7 +36,7 @@ class GPTConfig(nn.Module):
     eval_iters = 200
     max_tokens = 500
     learning_rate = 3e-4
-    n_blocks = 3
+    n_blocks = 6
     att_dropout = 0.2  # 正则化
     res_dropout = 0.2
     fw_dropout = 0.2
@@ -43,12 +44,20 @@ class GPTConfig(nn.Module):
 
 if GPTConfig.device == "cuda":
     torch.cuda.manual_seed(47)
+    print("GPU上运行...")
 
 # 获取mini_batch的函数
-model = TransformerModel(GPTConfig).to(GPTConfig.device)  # 模型实例
-model.load_state_dict(torch.load("checkpoint/trisa_ffwd_res_layerNorm_Model.pth"))
+model = RainbowGPT(GPTConfig).to(GPTConfig.device)  # 模型实例
+model.load_state_dict(torch.load("checkpoint/2024-05-11-00-30-09.pth"))
+# model.load_state_dict(torch.load("checkpoint/trisa_ffwd_res_layerNorm_Model.pth"))
+total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+print(f"模型参数量：{total_params}.")
+
 
 # 预测
-with open('outcome/fake_shakespeare.txt', 'w', encoding='utf-8') as file:
+with open('outcome/fake_shakespeare_2.txt', 'w', encoding='utf-8') as file:
     file.write(
         decoder(model.generate(torch.zeros((1, 1), dtype=torch.long, device=GPTConfig.device), 7777)[0].tolist()))
+
+
+print("预测完成.")
