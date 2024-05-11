@@ -4,19 +4,30 @@ from torch.nn import functional as F
 from models.Block import Block
 
 from tqdm import tqdm
+import time
 
 
 class RainbowGPT(nn.Module):
+    class ModelStruct:
+        vocab_size = 65
+        n_embd = 384
+        block_size = 256
+        n_embd = 384
+        n_blocks = 6
+        num_heads = 6
+        att_dropout =  0.2
+        res_dropout =  0.2
+        fw_dropout = 0.2
 
     def __init__(self, config):  # vocal_size是上面的全局参数，不需要传入构造函数。
         super().__init__()
         self.config = config
         self.transformer = nn.ModuleDict({
-            "wte": nn.Embedding(config.vocab_size, config.n_embd),
-            "wpe": nn.Embedding(config.block_size, config.n_embd),
-            "blocks": nn.Sequential(*[Block(config) for _ in range(config.n_blocks)]),
-            "ln_f": nn.LayerNorm(config.n_embd),
-            "lm_head": nn.Linear(config.n_embd, config.vocab_size)
+            "wte": nn.Embedding(self.ModelStruct.vocab_size, self.ModelStruct.n_embd),
+            "wpe": nn.Embedding(self.ModelStruct.block_size, self.ModelStruct.n_embd),
+            "blocks": nn.Sequential(*[Block(self.ModelStruct) for _ in range(self.ModelStruct.n_blocks)]),
+            "ln_f": nn.LayerNorm(self.ModelStruct.n_embd),
+            "lm_head": nn.Linear(self.ModelStruct.n_embd, self.ModelStruct.vocab_size)
         })
 
     def forward(self, idx, target=None):
@@ -43,10 +54,23 @@ class RainbowGPT(nn.Module):
     def generate(self, idx, max_tokens):
         for _ in tqdm(range(max_tokens), desc="Generating text"):
             # 有位置嵌入表后，输入的长度必须限制，否则查表会越界。ps:刚好可以输入最大值的上下文长度block，而不是block-1
-            content = idx[:, -self.config.block_size:]
+            content = idx[:, -self.ModelStruct.block_size:]
             logits, loss = self(content)
             logits = logits[:, -1, :]
             probs = F.softmax(logits, dim=-1)
             idx_next = torch.multinomial(probs, num_samples=1)
+            idx = torch.cat((idx, idx_next), dim=1)
+        return idx
+
+    def generate_and_print_token(self, idx, max_tokens, decoder):
+        for _ in range(max_tokens):
+            # 有位置嵌入表后，输入的长度必须限制，否则查表会越界。ps:刚好可以输入最大值的上下文长度block，而不是block-1
+            content = idx[:, -self.ModelStruct.block_size:]
+            logits, loss = self(content)
+            logits = logits[:, -1, :]
+            probs = F.softmax(logits, dim=-1)
+            idx_next = torch.multinomial(probs, num_samples=1)
+            print(decoder(idx_next.item()), end='', flush=True)
+            # time.sleep(0.1)
             idx = torch.cat((idx, idx_next), dim=1)
         return idx
