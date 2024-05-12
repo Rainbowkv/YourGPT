@@ -211,5 +211,5 @@ print(decoder(model.generate(torch.zeros((1, 1), dtype=torch.long, device=device
 # 仅保存模型参数
 torch.save(model.state_dict(),
            "checkpoint/" + datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + f"-params-{total_params}" + ".pth")
-print(f"模型保存成功, 参数量：{model.parameters()}.")
+print(f"模型保存成功.")
 print(model)
