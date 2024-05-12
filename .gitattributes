@@ -1,2 +1,0 @@
-*.pth filter=lfs diff=lfs merge=lfs -text
-checkpoint/2024-05-12-05-16-50-params-42783809.pth filter=lfs diff=lfs merge=lfs -text
