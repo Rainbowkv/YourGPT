@@ -15,8 +15,8 @@ class RainbowGPT(nn.Module):
         n_embd = 384
         n_blocks = 6
         num_heads = 6
-        att_dropout =  0.2
-        res_dropout =  0.2
+        att_dropout = 0.2
+        res_dropout = 0.2
         fw_dropout = 0.2
 
     def __init__(self, config):  # vocal_size是上面的全局参数，不需要传入构造函数。

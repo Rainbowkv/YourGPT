@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
@@ -13,16 +15,16 @@ if device == "cuda":
     torch.cuda.manual_seed(47)
 train_data_proportion = 0.9
 # 超参数设置
-batch_size = 64
+batch_size = 32
 block_size = 256
-n_embd = 384
-num_heads = 6
+n_embd = 64
+num_heads = 4
 iterations = 5000
 eval_interval = 500
 eval_iters = 200
 max_tokens = 500
-learning_rate = 3e-4
-n_blocks = 6
+learning_rate = 1e-3
+n_blocks = 1
 dropout = 0.2  # 正则化
 # ------------------------------------------------------
 
@@ -203,9 +205,11 @@ for cur_iter in tqdm(range(iterations + 1), desc="Trainning"):
     loss.backward()
     optimizer.step()
 
-print(f"训练耗时：{time.time()-start_time} s")
+print(f"训练耗时：{time.time() - start_time} s")
 # 预测
 print(decoder(model.generate(torch.zeros((1, 1), dtype=torch.long, device=device), 500)[0].tolist()))
-# # 仅保存模型参数
-# torch.save(model.state_dict(), "trisa_ffwd_res_layerNorm_Model.pth")
-# print("模型保存成功")
+# 仅保存模型参数
+torch.save(model.state_dict(),
+           "checkpoint/" + datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + f"-params-{total_params}" + ".pth")
+print(f"模型保存成功, 参数量：{model.parameters()}.")
+print(model)

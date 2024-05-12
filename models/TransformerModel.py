@@ -5,24 +5,33 @@ from models.Block import Block
 
 
 class TransformerModel(nn.Module):
+    class ModelStruct:
+        vocab_size = 65
+        block_size = 256
+        n_embd = 384
+        n_blocks = 1
+        num_heads = 6
+        att_dropout = 0.2
+        res_dropout = 0.2
+        fw_dropout = 0.2
 
     def __init__(self, config):  # vocal_size是上面的全局参数，不需要传入构造函数。
         super().__init__()
         self.config = config
-        self.token_embedding_table = nn.Embedding(config.vocab_size,
-                                                  config.n_embd)  # (B, T, vocab_size)->(B, T, n_embd)
-        self.pos_embedding_table = nn.Embedding(config.block_size, config.n_embd)  # pos和token编码长度必须一致，下面要加起来。
+        self.token_embedding_table = nn.Embedding(self.ModelStruct.vocab_size,
+                                                  self.ModelStruct.n_embd)  # (B, T, vocab_size)->(B, T, n_embd)
+        self.pos_embedding_table = nn.Embedding(self.ModelStruct.block_size, self.ModelStruct.n_embd)  # pos和token编码长度必须一致，下面要加起来。
 
         self.blocks = nn.Sequential(
-            *[Block(config) for _ in range(config.n_blocks)]
+            *[Block(self.ModelStruct) for _ in range(self.ModelStruct.n_blocks)]
         )
-        self.ln_f = nn.LayerNorm(config.n_embd)
+        self.ln_f = nn.LayerNorm(self.ModelStruct.n_embd)
         self.net = nn.Sequential(  # 构建网络
             self.blocks,
             self.ln_f
         )
 
-        self.lm_head = nn.Linear(config.n_embd, config.vocab_size)  # 这里不再像二元模型时 编码维度==词汇量大小，因为解码不那么容易，需要明确的中间层。
+        self.lm_head = nn.Linear(self.ModelStruct.n_embd, self.ModelStruct.vocab_size)  # 这里不再像二元模型时 编码维度==词汇量大小，因为解码不那么容易，需要明确的中间层。
 
     def forward(self, idx, target=None):
         tok_emd = self.token_embedding_table(idx)  # tok_emd.shape = (B, T, C), C = n_embd
@@ -45,7 +54,7 @@ class TransformerModel(nn.Module):
 
     def generate(self, idx, max_tokens):
         for _ in range(max_tokens):
-            content = idx[:, -self.config.block_size:]  # 有位置嵌入表后，输入的长度必须限制，否则查表会越界。ps:刚好可以输入最大值的上下文长度block，而不是block-1
+            content = idx[:, -self.ModelStruct.block_size:]  # 有位置嵌入表后，输入的长度必须限制，否则查表会越界。ps:刚好可以输入最大值的上下文长度block，而不是block-1
             logits, loss = self(content)
             logits = logits[:, -1, :]
             probs = F.softmax(logits, dim=-1)
