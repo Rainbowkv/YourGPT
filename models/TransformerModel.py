@@ -9,12 +9,12 @@ class TransformerModel(nn.Module):
     class ModelStruct:
         vocab_size = 65
         block_size = 256
-        n_embd = 384
-        n_blocks = 1
+        n_embd = 768
+        n_blocks = 6
         num_heads = 6
-        att_dropout = 0.2
-        res_dropout = 0.2
-        fw_dropout = 0.2
+        att_dropout = 0.25
+        res_dropout = 0.25
+        fw_dropout = 0.25
 
     def __init__(self, config):  # vocal_size是上面的全局参数，不需要传入构造函数。
         super().__init__()

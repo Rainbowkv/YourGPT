@@ -35,8 +35,8 @@ n = int(EvalConfig.train_data_proportion * len(input_sequence))
 train_data = input_sequence[:n]
 val_data = input_sequence[n:]
 
-model = UltimateModel(EvalConfig).to(EvalConfig.device)  # 模型实例
-model.load_state_dict(torch.load("checkpoint/2024-05-12-23-23-08-params-10873409.pth"))
+model = TransformerModel(EvalConfig).to(EvalConfig.device)  # 模型实例
+model.load_state_dict(torch.load("checkpoint/2024-05-12-05-16-50-params-42783809.pth"))
 # 计算参数数量
 total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 print(f"模型参数量：{total_params}.")
