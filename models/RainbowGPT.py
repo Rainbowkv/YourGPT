@@ -1,10 +1,9 @@
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
-from models.Block import Block
-
 from tqdm import tqdm
-import time
+
+from .Block import Block
 
 
 class RainbowGPT(nn.Module):

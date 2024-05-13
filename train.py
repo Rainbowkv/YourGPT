@@ -1,13 +1,12 @@
 import torch
 import torch.nn as nn
-from models.RainbowGPT import RainbowGPT
-from models.UltimateModel import UltimateModel
-from utils.utils import get_batch, estimate_loss
-
 from dataclasses import dataclass
 import time
 from datetime import datetime
 from tqdm import tqdm
+
+from models import *
+from utils import *
 
 
 @dataclass
@@ -46,7 +45,7 @@ n = int(TrainConfig.train_data_proportion * len(input_sequence))
 train_data = input_sequence[:n]
 val_data = input_sequence[n:]
 
-model = UtilmateModel(TrainConfig).to(TrainConfig.device)  # 模型实例
+model = UltimateModel(TrainConfig).to(TrainConfig.device)  # 模型实例
 # 计算参数数量
 total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 print(f"模型参数量：{total_params}.")

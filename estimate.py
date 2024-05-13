@@ -1,10 +1,8 @@
 import torch
-from models.RainbowGPT import RainbowGPT
-from models.TransformerModel import TransformerModel
-from models.UltimateModel import UtilmateModel
-from utils.utils import estimate_loss
-
 from dataclasses import dataclass
+
+from models import *
+from utils import *
 
 
 @dataclass
@@ -37,7 +35,7 @@ n = int(EvalConfig.train_data_proportion * len(input_sequence))
 train_data = input_sequence[:n]
 val_data = input_sequence[n:]
 
-model = UtilmateModel(EvalConfig).to(EvalConfig.device)  # 模型实例
+model = UltimateModel(EvalConfig).to(EvalConfig.device)  # 模型实例
 model.load_state_dict(torch.load("checkpoint/2024-05-12-23-23-08-params-10873409.pth"))
 # 计算参数数量
 total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)

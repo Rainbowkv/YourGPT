@@ -1,9 +1,7 @@
 from datetime import datetime
-
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
-
 import time
 from tqdm import tqdm
 

@@ -3,9 +3,7 @@ import torch
 import torch.nn as nn
 import json
 
-from models.TransformerModel import TransformerModel
-from models.RainbowGPT import RainbowGPT
-from models.UltimateModel import UltimateModel
+from models import *
 
 
 # torch.manual_seed(1337)
