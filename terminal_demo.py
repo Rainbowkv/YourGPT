@@ -5,6 +5,7 @@ import json
 
 from models.TransformerModel import TransformerModel
 from models.RainbowGPT import RainbowGPT
+from models.UltimateModel import UltimateModel
 
 
 # torch.manual_seed(1337)
@@ -32,8 +33,8 @@ if EvalConfig.device == "cuda":
     print("GPU上运行...")
 
 # 获取mini_batch的函数
-model = RainbowGPT(EvalConfig).to(EvalConfig.device)  # 模型实例
-model.load_state_dict(torch.load("checkpoint/2024-05-11-00-30-09.pth"))
+model = UltimateModel(EvalConfig).to(EvalConfig.device)  # 模型实例
+model.load_state_dict(torch.load("checkpoint/2024-05-12-23-23-08-params-10873409.pth"))
 # model.load_state_dict(torch.load("checkpoint/trisa_ffwd_res_layerNorm_Model.pth"))
 total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 print(f"模型参数量：{total_params}.")

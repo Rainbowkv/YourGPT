@@ -4,7 +4,7 @@ from torch.nn import functional as F
 from models.Block import Block
 
 
-class UtilmateModel(nn.Module):
+class UltimateModel(nn.Module):
     class ModelStruct:
         vocab_size = 65
         block_size = 512 # 256
@@ -59,5 +59,18 @@ class UtilmateModel(nn.Module):
             logits = logits[:, -1, :]
             probs = F.softmax(logits, dim=-1)
             idx_next = torch.multinomial(probs, num_samples=1)
+            idx = torch.cat((idx, idx_next), dim=1)
+        return idx
+
+    def generate_and_print_token(self, idx, max_tokens, decoder):
+        for _ in range(max_tokens):
+            # 有位置嵌入表后，输入的长度必须限制，否则查表会越界。ps:刚好可以输入最大值的上下文长度block，而不是block-1
+            content = idx[:, -self.ModelStruct.block_size:]
+            logits, loss = self(content)
+            logits = logits[:, -1, :]
+            probs = F.softmax(logits, dim=-1)
+            idx_next = torch.multinomial(probs, num_samples=1)
+            print(decoder(idx_next.item()), end='', flush=True)
+            # time.sleep(0.1)
             idx = torch.cat((idx, idx_next), dim=1)
         return idx

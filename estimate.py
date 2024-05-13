@@ -1,7 +1,7 @@
 import torch
-import torch.nn as nn
 from models.RainbowGPT import RainbowGPT
 from models.TransformerModel import TransformerModel
+from models.UltimateModel import UtilmateModel
 from utils.utils import estimate_loss
 
 from dataclasses import dataclass
@@ -12,16 +12,10 @@ from dataclasses import dataclass
 class EvalConfig:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     vocab_size = 65
-    # 训练设置
-    batch_size = 256
-    block_size = 256
-
+    batch_size = 128
     train_data_proportion = 0.9
-    iterations = 5000
     eval_interval = 500
     eval_iters = 200
-    max_tokens = 500
-    learning_rate = 3e-4
 
 
 torch.manual_seed(1337)
@@ -43,8 +37,8 @@ n = int(EvalConfig.train_data_proportion * len(input_sequence))
 train_data = input_sequence[:n]
 val_data = input_sequence[n:]
 
-model = TransformerModel(EvalConfig).to(EvalConfig.device)  # 模型实例
-model.load_state_dict(torch.load("checkpoint/2024-05-11-22-08-25-params-1920065.pth"))
+model = UtilmateModel(EvalConfig).to(EvalConfig.device)  # 模型实例
+model.load_state_dict(torch.load("checkpoint/2024-05-12-23-23-08-params-10873409.pth"))
 # 计算参数数量
 total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 print(f"模型参数量：{total_params}.")

@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from models.RainbowGPT import RainbowGPT
-from models.UltimateModel import UtilmateModel
+from models.UltimateModel import UltimateModel
 from utils.utils import get_batch, estimate_loss
 
 from dataclasses import dataclass
