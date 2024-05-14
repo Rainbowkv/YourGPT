@@ -1,15 +1,15 @@
 import torch.nn as nn
-from .MultiAttentionHead import MultiAttentionHead
+from .MultiSA import MultiSA
 from .FeedForward import FeedForward
 
 
-class Block(nn.Module):
+class EncoderBlock(nn.Module):
 
     def __init__(self, config):
         super().__init__()
-        self.ln1 = nn.LayerNorm(config.n_embd)
-        self.sa = MultiAttentionHead(config)
-        self.ln2 = nn.LayerNorm(config.n_embd)
+        self.ln1 = nn.LayerNorm(config.n_embd, dtype=config.precision)
+        self.sa = MultiSA(config)
+        self.ln2 = nn.LayerNorm(config.n_embd, dtype=config.precision)
         self.ffwd = FeedForward(config)
 
     def forward(self, X):

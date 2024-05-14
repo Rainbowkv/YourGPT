@@ -1,9 +1,8 @@
-import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
 
-class MultiAttentionHead(nn.Module):
+class MultiSA(nn.Module):
 
     def __init__(self, config):
         assert config.n_embd % config.num_heads == 0, \
@@ -12,10 +11,8 @@ class MultiAttentionHead(nn.Module):
         self.num_heads = config.num_heads
         self.head_size = config.n_embd // config.num_heads
         self.n_embd = config.n_embd
-        self.c_attn = nn.Linear(self.n_embd, self.n_embd * 3, bias=False)
-        # 解码时，block_size是t的上限，不要误以为相等。预测其实相当于解码。
-        self.register_buffer('tril', torch.tril(torch.ones(config.block_size, config.block_size)))
-        self.proj = nn.Linear(self.n_embd, self.n_embd, bias=False)  # 投影回残差路径的层
+        self.c_attn = nn.Linear(self.n_embd, self.n_embd * 3, bias=False, dtype=config.precision)
+        self.proj = nn.Linear(self.n_embd, self.n_embd, bias=False, dtype=config.precision)  # 投影回残差路径的层
         self.W_dropout = nn.Dropout(config.att_dropout)
         self.out_dropout = nn.Dropout(config.res_dropout)
 
@@ -32,8 +29,6 @@ class MultiAttentionHead(nn.Module):
         V = V.view(b, t, self.num_heads, self.n_embd // self.num_heads).transpose(1, 2)
 
         W = Q @ K.transpose(-2, -1) * c ** -0.5  # (B, nh, T, T)
-        # 解码时，block_size是t的上限，不要误以为相等。预测其实相当于解码。
-        W = W.masked_fill(self.tril[:t, :t] == 0, float('-inf'))
         W = F.softmax(W, dim=-1)
         W = self.W_dropout(W)
         OUT = W @ V  # (B, nh, T, hs)

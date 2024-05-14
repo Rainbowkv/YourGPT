@@ -2,6 +2,8 @@ from dataclasses import dataclass
 import torch
 import torch.nn as nn
 import json
+import time
+from datetime import datetime
 
 from models import *
 
@@ -23,10 +25,23 @@ if DemoConfig.device == "cuda":
     # torch.cuda.manual_seed(47)
     print("GPU上运行...")
 
+
+
 # 获取mini_batch的函数
 model = DevModel(DemoConfig).to(DemoConfig.device)  # 模型实例
 # model.load_state_dict(torch.load("checkpoint/2024-05-12-05-16-50-params-42783809.pth"))
+# model = UltimateModel(DemoConfig).to(DemoConfig.device)  # 模型实例
+# model.load_state_dict(torch.load("checkpoint/2024-05-12-23-23-08-params-10873409.pth"))
+
 total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 print(f"模型参数量：{total_params}.")
+# time.sleep(1000)
 for param in model.parameters():
     print(f"param总大小：{param.size()}, 含有的元素个数：{param.nelement()}, 每个元素大小：{param.element_size()}")
+
+# 仅保存模型参数
+torch.save(model.state_dict(),
+           "checkpoint/" + datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + f"-params-{total_params}" + ".pth")
+print(f"模型保存成功.")
+
+# print(torch.load("checkpoint/2024-05-12-05-16-50-params-42783809.pth"))

@@ -3,11 +3,12 @@ import torch.nn as nn
 from torch.nn import functional as F
 from tqdm import tqdm
 
-from .Block import Block
+from .DecoderBlock import DecoderBlock
 
 
 class RainbowGPT(nn.Module):
     class ModelStruct:
+        precision = torch.float32
         vocab_size = 65
         n_embd = 384
         block_size = 256
@@ -21,11 +22,11 @@ class RainbowGPT(nn.Module):
         super().__init__()
         self.config = config
         self.transformer = nn.ModuleDict({
-            "wte": nn.Embedding(self.ModelStruct.vocab_size, self.ModelStruct.n_embd),
-            "wpe": nn.Embedding(self.ModelStruct.block_size, self.ModelStruct.n_embd),
-            "blocks": nn.Sequential(*[Block(self.ModelStruct) for _ in range(self.ModelStruct.n_blocks)]),
-            "ln_f": nn.LayerNorm(self.ModelStruct.n_embd),
-            "lm_head": nn.Linear(self.ModelStruct.n_embd, self.ModelStruct.vocab_size)
+            "wte": nn.Embedding(self.ModelStruct.vocab_size, self.ModelStruct.n_embd, dtype=self.ModelStruct.precision),
+            "wpe": nn.Embedding(self.ModelStruct.block_size, self.ModelStruct.n_embd, dtype=self.ModelStruct.precision),
+            "blocks": nn.Sequential(*[DecoderBlock(self.ModelStruct) for _ in range(self.ModelStruct.n_blocks)]),
+            "ln_f": nn.LayerNorm(self.ModelStruct.n_embd, dtype=self.ModelStruct.precision),
+            "lm_head": nn.Linear(self.ModelStruct.n_embd, self.ModelStruct.vocab_size, dtype=self.ModelStruct.precision)
         })
 
     def forward(self, idx, target=None):

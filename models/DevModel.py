@@ -2,17 +2,17 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-from .Block import Block
+from .DecoderBlock import DecoderBlock
 
 
 class DevModel(nn.Module):
     class ModelStruct:
         precision = torch.float16
         vocab_size = 65
-        block_size = 256
-        n_embd = 768
-        n_blocks = 6
-        num_heads = 6
+        block_size = 8
+        n_embd = 12288
+        n_blocks = 96
+        num_heads = 128
         att_dropout = 0.25
         res_dropout = 0.25
         fw_dropout = 0.25
@@ -28,15 +28,16 @@ class DevModel(nn.Module):
                                                 dtype=self.ModelStruct.precision)  # pos和token编码长度必须一致，下面要加起来。
 
         self.blocks = nn.Sequential(
-            *[Block(self.ModelStruct) for _ in range(self.ModelStruct.n_blocks)]
+            *[DecoderBlock(self.ModelStruct) for _ in range(self.ModelStruct.n_blocks)]
         )
-        self.ln_f = nn.LayerNorm(self.ModelStruct.n_embd)
+        self.ln_f = nn.LayerNorm(self.ModelStruct.n_embd, dtype=self.ModelStruct.precision)
         self.net = nn.Sequential(
             self.blocks,
             self.ln_f
         )
         self.lm_head = nn.Linear(self.ModelStruct.n_embd,
-                                 self.ModelStruct.vocab_size)  # 这里不再像二元模型时 编码维度==词汇量大小，因为解码不那么容易，需要明确的中间层。
+                                 self.ModelStruct.vocab_size, 
+                                 dtype=self.ModelStruct.precision)  # 这里不再像二元模型时 编码维度==词汇量大小，因为解码不那么容易，需要明确的中间层。
 
     def forward(self, idx, target=None):
         # 其实编码层和解码层也是网络的部分，因为它们的权重同样会被更新。
@@ -57,8 +58,9 @@ class DevModel(nn.Module):
             logits = logits.view(B * T, C)
             target = target.view(B * T)
             loss = F.cross_entropy(logits, target)
+            print(f"logits.type = {logits.dtype}")
+            print(f"loss.type = {loss.dtype}")
         return logits, loss
-        pass
 
     def generate(self, idx, max_tokens):
         for _ in range(max_tokens):

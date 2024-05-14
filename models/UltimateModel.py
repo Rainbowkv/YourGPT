@@ -2,11 +2,12 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-from .Block import Block
+from .DecoderBlock import DecoderBlock
 
 
 class UltimateModel(nn.Module):
     class ModelStruct:
+        precision = torch.float16
         vocab_size = 65
         block_size = 512  # 256
         n_embd = 384  # 768
@@ -20,21 +21,24 @@ class UltimateModel(nn.Module):
         super().__init__()
         self.config = config
         self.token_embedding_table = nn.Embedding(self.ModelStruct.vocab_size,
-                                                  self.ModelStruct.n_embd)  # (B, T, vocab_size)->(B, T, n_embd)
+                                                  self.ModelStruct.n_embd,
+                                                  dtype=self.ModelStruct.precision)  # (B, T, vocab_size)->(B, T, n_embd)
         self.pos_embedding_table = nn.Embedding(self.ModelStruct.block_size,
-                                                self.ModelStruct.n_embd)  # pos和token编码长度必须一致，下面要加起来。
+                                                self.ModelStruct.n_embd,
+                                                  dtype=self.ModelStruct.precision)  # pos和token编码长度必须一致，下面要加起来。
 
         self.blocks = nn.Sequential(
-            *[Block(self.ModelStruct) for _ in range(self.ModelStruct.n_blocks)]
+            *[DecoderBlock(self.ModelStruct) for _ in range(self.ModelStruct.n_blocks)]
         )
-        self.ln_f = nn.LayerNorm(self.ModelStruct.n_embd)
+        self.ln_f = nn.LayerNorm(self.ModelStruct.n_embd, dtype=self.ModelStruct.precision)
         self.net = nn.Sequential(  # 构建网络
             self.blocks,
             self.ln_f
         )
 
         self.lm_head = nn.Linear(self.ModelStruct.n_embd,
-                                 self.ModelStruct.vocab_size)  # 这里不再像二元模型时 编码维度==词汇量大小，因为解码不那么容易，需要明确的中间层。
+                                 self.ModelStruct.vocab_size,
+                                 dtype=self.ModelStruct.precision)  # 这里不再像二元模型时 编码维度==词汇量大小，因为解码不那么容易，需要明确的中间层。
 
     def forward(self, idx, target=None):
         tok_emd = self.token_embedding_table(idx)  # tok_emd.shape = (B, T, C), C = n_embd
