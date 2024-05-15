@@ -1,4 +1,4 @@
-from TrainDataSet import *
+from .TrainDataSet import *
 
 __all__ = [
     "TrainDataSet"
