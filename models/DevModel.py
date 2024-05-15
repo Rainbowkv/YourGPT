@@ -11,7 +11,7 @@ class DevModel(nn.Module):
         vocab_size = 65
         block_size = 256
         n_embd = 384
-        n_blocks = 12
+        n_blocks = 6
         num_heads = 6
         att_dropout = 0.25
         res_dropout = 0.25
