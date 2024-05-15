@@ -100,4 +100,4 @@
 
 ## 致谢
 
-本项目受到了[nanoGPT](https://github.com/karpathy/nanoGPT)项目的启发，在其基础上进行了扩展与改进。我们对Andrej Karpathy及其贡献者们表示深深的感激和敬意。
+&emsp;&emsp;本项目受到了[nanoGPT](https://github.com/karpathy/nanoGPT)项目的启发，在其基础上进行了扩展与改进。对Andrej Karpathy及其贡献者们表示深深的感激和敬意。
