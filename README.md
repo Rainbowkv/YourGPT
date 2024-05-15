@@ -19,14 +19,16 @@
 
 ---
 *项目结构*
-├─bigram_demo  # 二元模型目录
-├─checkpoint  # 模型参数保存目录
-├─data  # 数据集目录
-├─images
-├─models  # 模型类目录
-├─outcome  # 保存预测结果
-├─tokenizer  # 词->数字的映射表
-└─utils  # 工具目录
+```.
+├─ bigram_demo     # 二元模型
+├─ checkpoint      # 模型参数
+├─ data            # 数据集
+├─ images          # 图片
+├─ models          # 模型类
+├─ outcome         # 预测结果
+├─ tokenizer       # 词编码
+└─ utils           # 小工具
+```
 
 ## 特色
 
