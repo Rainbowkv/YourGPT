@@ -16,6 +16,17 @@
 &emsp;&emsp;YourGPT项目基于莎士比亚的作品集作为训练数据，从零使用pytorch写出GPT的核心结构，您将学会如何构建和预训练一个GPT语言模型。
 &emsp;&emsp;项目的主要特色是一个包含Transformer解码器结构的仅200+行文件[transformer_4d.py](https://github.com/Rainbowkv/YourGPT/blob/main/transformer_4d.py)，其中不仅完整包含模型的构建，还包含训练代码。这意味着，完成[环境搭建](#环境搭建)后，只需要通过`python transformer_4d.py`运行这一个单独的文件，您就可以完成模型的训练和保存，无需依赖项目中的其他文件。
 
+---
+*项目结构*
+├─bigram_demo  # 二元模型目录
+├─checkpoint  # 模型参数保存目录
+├─data  # 数据集目录
+├─images
+├─models  # 模型类目录
+├─outcome  # 保存预测结果
+├─tokenizer  # 词->数字的映射表
+└─utils  # 工具目录
+
 ## 特色
 
 - **完整的Transformer解码器实现：** 项目中包含一个完整的Transformer解码器结构实现，使得您可以深入理解这一现代NLP模型的核心。
@@ -78,3 +89,7 @@
 ## 许可证
 
 &emsp;&emsp;本项目采用MIT许可证，详细信息请参阅[LICENSE](https://github.com/Rainbowkv/YourGPT/blob/main/LICENSE)文件。
+
+## 致谢
+
+本项目受到了[nanoGPT](https://github.com/karpathy/nanoGPT)项目的启发，在其基础上进行了扩展与改进。我们对Andrej Karpathy及其贡献者们表示深深的感激和敬意。
