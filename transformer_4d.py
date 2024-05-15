@@ -12,18 +12,22 @@ torch.manual_seed(1337)
 if device == "cuda":
     torch.cuda.manual_seed(47)
 train_data_proportion = 0.9
-# 超参数设置
-batch_size = 32
+# 模型超参数设置
+n_embd = 384
 block_size = 256
-n_embd = 64
+dropout = 0.2  # 正则化
+n_blocks = 2
 num_heads = 4
+# 训练参数设置
+batch_size = 32
 iterations = 5000
+learning_rate = 1e-3
+# 评估参数设置
 eval_interval = 500
 eval_iters = 200
-max_tokens = 500
-learning_rate = 1e-3
-n_blocks = 1
-dropout = 0.2  # 正则化
+# 预测参数设置
+predict_tokens = 500
+
 # ------------------------------------------------------
 
 # 加载数据集
