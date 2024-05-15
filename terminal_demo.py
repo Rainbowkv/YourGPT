@@ -27,9 +27,9 @@ if DemoConfig.device == "cuda":
     print("GPU上运行...")
 
 # 获取mini_batch的函数
-model = UltimateModel(DemoConfig).to(DemoConfig.device)  # 模型实例
-# model.load_state_dict(torch.load("checkpoint/2024-05-12-05-16-50-params-42783809.pth"))
-model.load_state_dict(torch.load("checkpoint/2024-05-12-23-23-08-params-10873409.pth"))
+model = HugeModel(DemoConfig).to(DemoConfig.device)  # 模型实例
+model.load_state_dict(torch.load("checkpoint/2024-05-12-05-16-50-params-42783809.pth"))
+# model.load_state_dict(torch.load("checkpoint/2024-05-12-23-23-08-params-10873409.pth"))
 total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 print(f"模型参数量：{total_params}.")
 

@@ -7,7 +7,6 @@ from tqdm import tqdm
 
 # 训练、评估、预测设置
 device = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"device = {device}")
 torch.manual_seed(1337)
 if device == "cuda":
     torch.cuda.manual_seed(47)

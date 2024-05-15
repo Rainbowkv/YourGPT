@@ -53,6 +53,13 @@
 
    `pip install -r requirements.txt`
 
+3. **预训练模型下载（可选）：**
+   您需要通过git lfs工具来拉取本项目的checkpoints目录，模型类与参数文件对应关系如下：
+   | 模型类 | 参数文件 | 参数量 |
+   |--------|---------|-------|
+   | models.UltimateModel | checkpoint/2024-05-12-23-23-08-params-10873409.pth | 10873409 |
+   | models.HugeModel | checkpoint/2024-05-12-05-16-50-params-42783809.pth | 42783809 |
+
 ## 快速开始
 1. **体验预训练模型推理：**
 

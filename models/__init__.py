@@ -1,10 +1,10 @@
-from .TransformerModel import TransformerModel
+from .HugeModel import HugeModel
 from .RainbowGPT import RainbowGPT
 from .UltimateModel import UltimateModel
 from .DevModel import DevModel
 
 __all__ = [
-    "TransformerModel",
+    "HugeModel",
     "RainbowGPT",
     "UltimateModel",
     "DevModel"

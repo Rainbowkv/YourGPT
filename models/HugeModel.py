@@ -5,7 +5,7 @@ from torch.nn import functional as F
 from .DecoderBlock import DecoderBlock
 
 
-class TransformerModel(nn.Module):
+class HugeModel(nn.Module):
     class ModelStruct:
         precision = torch.float32
         vocab_size = 65
