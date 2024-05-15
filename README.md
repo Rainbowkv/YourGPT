@@ -57,19 +57,12 @@
    您需要通过git lfs工具来拉取本项目的checkpoints目录，模型类与参数文件对应关系如下：
    | 模型类 | 参数文件 | 参数量 |
    |--------|---------|-------|
-   | models.UltimateModel | checkpoint/2024-05-12-23-23-08-params-10873409.pth | 10873409 |
-   | models.HugeModel | checkpoint/2024-05-12-05-16-50-params-42783809.pth | 42783809 |
+   | models.UltimateModel | checkpoint/2024-05-12-23-23-08-params-10873409.pth | 0.01B |
+   | models.HugeModel | checkpoint/2024-05-12-05-16-50-params-42783809.pth | 0.04B |
 
 ## 快速开始
-1. **体验预训练模型推理：**
 
-   一切准备就绪后，运行以下命令体验本项目预训练的GPT(大约0.01B参数量)模型：
-
-   `python terminal_demo.py`
-
-   此脚本优先使用GPU推理，显存占用0.7GB，GPU不可用时自动切换回CPU。
-
-2. **训练自己的GPT：**
+1. **训练自己的GPT：**
 
    这里直接使用项目特色文件[transformer_4d.py](https://github.com/Rainbowkv/YourGPT/blob/main/transformer_4d.py)演示，文件头部区域，调整模型的超参数：
    
@@ -85,12 +78,25 @@
 
    ![transformers_4d_1.png](https://github.com/Rainbowkv/YourGPT/blob/main/images/transformers_4d_1.png)
 
-   在考虑GPU显存的情况下，您可能需要提前预知模型的参数以防止OOM，修改[utils/num_params_caculate.py](https://github.com/Rainbowkv/YourGPT/blob/main/utils/num_params_caculate.py)文件相应参数，运行`python utils/num_params_caculate.py`即可进行计算。
+   在您设置好参数后，直接执行下面的训练命令（推荐这样做）：
 
-   ---
+   `python transformer_4d.py`
 
-   设置好参数后，执行`python transformer_4d.py`开启训练：
    ![train_demo.png](https://github.com/Rainbowkv/YourGPT/blob/main/images/train_demo.png)
+   
+   
+   如果您需要知道模型的参数量以防止OOM，修改[utils/num_params_caculate.py](https://github.com/Rainbowkv/YourGPT/blob/main/utils/num_params_caculate.py)文件相应参数，运行`python utils/num_params_caculate.py`即可进行计算。
+
+<a id="try_predic"></a>
+
+2. **体验预训练模型推理(需要通过lfs下载checkpoints目录)：**
+
+   一切准备就绪后，运行以下命令体验本项目预训练的GPT(大约0.01B参数量)模型（脚本依赖文件checkpoint/2024-05-12-23-23-08-params-10873409.pth的存在）：
+
+   `python terminal_demo.py`
+
+   此脚本优先使用GPU推理，显存占用0.7GB，GPU不可用时自动切换回CPU。
+
 <a id="caculate_num_params"></a>
 
 3. **计算模型参数：**
