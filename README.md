@@ -13,11 +13,21 @@ YourGPT项目基于莎士比亚的作品集作为训练数据，通过这些丰�
 - **模块化的架构：** 虽然核心代码集中在一个文件中，但我们采用了模块化的设计思想，允许您轻松配置和调整GPT模型的结构，以实现参数量的扩缩。
 - **实践导向：** 通过实际操作构建和训练模型，加深对大语言模型和Transformer架构的理解。
 
-## 如何开始
+## 快速开始
 
-1. **环境设置：**
-   确保您的计算机上安装了Python 3.6及以上版本。另外，您需要安装PyTorch及项目依赖的其它第三方库。
-
-2. **克隆项目：**
+1. **克隆项目：**
    打开终端，运行以下命令将项目代码克隆到本地：
-`git clone https://github.com/Rainbowkv/YourGPT.git`
+   `git clone https://github.com/Rainbowkv/YourGPT.git`
+
+2. **安装依赖：**
+   在项目目录下运行以下命令安装所需的第三方库：
+   `cd YourGPT/`
+   `pip install -r requirements.txt`
+
+## 贡献
+
+欢迎您任何形式的贡献，无论是通过发起Pull Request来修正错误，还是提出新的特性和想法。如果您有任何问题，也欢迎通过Issues提出。
+
+## 许可证
+
+本项目采用MIT许可证，详细信息请参阅[LICENSE](https://github.com/Rainbowkv/YourGPT/blob/main/LICENSE)文件。
