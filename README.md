@@ -15,6 +15,7 @@
 ## 项目介绍
 
 &emsp;&emsp;YourGPT项目基于莎士比亚的作品集作为训练数据，从零使用pytorch写出GPT的核心结构，您将学会如何构建和预训练一个GPT语言模型。
+
 &emsp;&emsp;项目的主要特色是一个包含Transformer解码器结构的仅200+行文件[transformer_4d.py](https://github.com/Rainbowkv/YourGPT/blob/main/transformer_4d.py)，其中不仅完整包含模型的构建，还包含训练代码。这意味着，完成[环境搭建](#环境搭建)后，只需要通过`python transformer_4d.py`运行这一个单独的文件，您就可以完成模型的训练和保存，无需依赖项目中的其他文件。
 
 ---
@@ -35,7 +36,7 @@
 - **完整的Transformer解码器实现：** 项目中包含一个完整的Transformer解码器结构实现，使得您可以深入理解这一现代NLP模型的核心。
 - **独立文件设计：** 模型构建和训练需要的代码均在一个文件中，简化了学习过程，便于您快速上手。
 - **模块化的设计：** 项目同样有模块化的设计，models/目录下有不同参数量的模型类，供您在[train.py](https://github.com/Rainbowkv/YourGPT/blob/main/train.py)、[estimate.py](https://github.com/Rainbowkv/YourGPT/blob/main/estimate.py)、[terminal_demo.py](https://github.com/Rainbowkv/YourGPT/blob/main/terminal_demo.py)中直接使用，您也可以修改这些模型的结构。
-- **手动计算参数量：** [快速开始：3.计算模型参数](#快速开始)会带您计算自己所设计模型的参数量，查看模型的结构细节。
+- **手动计算参数量：** [快速开始：3.计算模型参数](#caculate_num_params)会带您计算自己所设计模型的参数量，查看模型的结构细节。
 - **实践导向：** 通过实际操作构建和训练模型，加深对大语言模型和Transformer架构的理解。
 
 ## 环境搭建
@@ -81,13 +82,13 @@
 
    设置好参数后，执行`python transformer_4d.py`开启训练：
    ![train_demo.png](https://github.com/Rainbowkv/YourGPT/blob/main/images/train_demo.png)
-
+<a id="caculate_num_params"></a>
 3. **计算模型参数**
    &emsp;&emsp;[penetrateModel.py](https://github.com/Rainbowkv/YourGPT/blob/main/penetrateModel.py)可以用来观察模型的结构，结合[手算模型参数量.txt](https://github.com/Rainbowkv/YourGPT/blob/main/手算模型参数量.txt)这个文件，您可以对模型的细节更加清晰。
 
 ## 贡献
 
-&emsp;&emsp;欢迎您任何形式的贡献，无论是通过发起Pull Request来修正错误，还是提出新的特性和想法。如果您有任何问题，也欢迎通过Issues提出。
+&emsp;&emsp;欢迎您任何形式的贡献，无论是通过发起Pull Request来修正错误，还是提出新的特性和想法。如果有任何问题，也欢迎通过Issues提出。
 
 ## 许可证
 
