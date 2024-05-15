@@ -55,13 +55,15 @@
 
 ## 快速开始
 1. **体验预训练模型推理：**
+
    一切准备就绪后，运行以下命令体验本项目预训练的GPT(大约0.01B参数量)模型：
 
    `python terminal_demo.py`
 
    此脚本优先使用GPU推理，显存占用0.7GB，GPU不可用时自动切换回CPU。
 
-2. **训练自己的GPT**
+2. **训练自己的GPT：**
+
    这里直接使用项目特色文件[transformer_4d.py](https://github.com/Rainbowkv/YourGPT/blob/main/transformer_4d.py)演示，文件头部区域，调整模型的超参数：
    
    | 模型参数 | 默认值 |
@@ -83,8 +85,10 @@
    设置好参数后，执行`python transformer_4d.py`开启训练：
    ![train_demo.png](https://github.com/Rainbowkv/YourGPT/blob/main/images/train_demo.png)
 <a id="caculate_num_params"></a>
-3. **计算模型参数**
-   &emsp;&emsp;[penetrateModel.py](https://github.com/Rainbowkv/YourGPT/blob/main/penetrateModel.py)可以用来观察模型的结构，结合[手算模型参数量.txt](https://github.com/Rainbowkv/YourGPT/blob/main/手算模型参数量.txt)这个文件，您可以对模型的细节更加清晰。
+
+3. **计算模型参数：**
+
+   [penetrateModel.py](https://github.com/Rainbowkv/YourGPT/blob/main/penetrateModel.py)可以用来观察模型的结构，结合[手算模型参数量.txt](https://github.com/Rainbowkv/YourGPT/blob/main/手算模型参数量.txt)这个文件，您可以对模型的细节更加清晰。
 
 ## 贡献
 
