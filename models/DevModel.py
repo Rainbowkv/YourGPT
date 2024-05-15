@@ -7,12 +7,12 @@ from .DecoderBlock import DecoderBlock
 
 class DevModel(nn.Module):
     class ModelStruct:
-        precision = torch.float16
+        precision = torch.float32
         vocab_size = 65
-        block_size = 8
-        n_embd = 12288
-        n_blocks = 96
-        num_heads = 128
+        block_size = 256
+        n_embd = 384
+        n_blocks = 12
+        num_heads = 6
         att_dropout = 0.25
         res_dropout = 0.25
         fw_dropout = 0.25
@@ -58,8 +58,6 @@ class DevModel(nn.Module):
             logits = logits.view(B * T, C)
             target = target.view(B * T)
             loss = F.cross_entropy(logits, target)
-            print(f"logits.type = {logits.dtype}")
-            print(f"loss.type = {loss.dtype}")
         return logits, loss
 
     def generate(self, idx, max_tokens):

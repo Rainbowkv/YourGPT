@@ -18,7 +18,7 @@ class TrainConfig(nn.Module):
     # 训练设置
     train_data_proportion = 0.9
     batch_size = 64
-    iterations = 500
+    iterations = 5000
     learning_rate = 3e-4
     eval_interval = 500
     eval_iters = 200
