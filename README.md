@@ -41,19 +41,19 @@
 
 ## 环境搭建
 
-1. **克隆项目：**
+### 1. **克隆项目：**
    打开终端，运行以下命令将项目代码克隆到本地：
 
    `git clone https://github.com/Rainbowkv/YourGPT.git`
 
-2. **安装依赖：**
+### 2. **安装依赖：**
    在项目目录下运行以下命令安装所需的第三方库：
 
    `cd YourGPT/`
 
    `pip install -r requirements.txt`
 
-3. **预训练模型下载（可选）：**
+### 3. **预训练模型下载（可选）：**
    您需要通过git lfs工具来拉取本项目的checkpoints目录，模型类与参数文件对应关系如下：
    | 模型类 | 参数文件 | 参数量 |
    |--------|---------|-------|
@@ -62,7 +62,7 @@
 
 ## 快速开始
 
-1. **训练自己的GPT：**
+### 1. **训练自己的GPT：**
 
    这里直接使用项目特色文件[transformer_4d.py](https://github.com/Rainbowkv/YourGPT/blob/main/transformer_4d.py)演示，文件头部区域，调整模型的超参数：
    
@@ -89,7 +89,7 @@
 
 <a id="try_predic"></a>
 
-2. **体验预训练模型推理(需要通过lfs下载checkpoints目录)：**
+### 2. **体验预训练模型推理(需要通过lfs下载checkpoints目录)：**
 
    一切准备就绪后，运行以下命令体验本项目预训练的GPT(大约0.01B参数量)模型（脚本依赖文件checkpoint/2024-05-12-23-23-08-params-10873409.pth的存在）：
 
@@ -99,9 +99,34 @@
 
 <a id="caculate_num_params"></a>
 
-3. **计算模型参数：**
+### 3. **计算模型参数：**
 
    [penetrateModel.py](https://github.com/Rainbowkv/YourGPT/blob/main/penetrateModel.py)可以用来观察模型的结构，结合[手算模型参数量.txt](https://github.com/Rainbowkv/YourGPT/blob/main/手算模型参数量.txt)这个文件，您可以对模型的细节更加清晰。
+
+### 4. **DDP多卡训练：**
+
+   linux下执行命令示例：
+   ```
+   CUDA_VISIBLE_DEVICES=3,4,5,6 python -m torch.distributed.launch \
+   --nproc_per_node=4 \
+   --nnodes=1 \
+   --node_rank=0 \
+   --master_addr=localhost \
+   --master_port=12345 \
+   DDP_use_launch.py
+   ```
+
+   windows下执行命令示例：
+   ```
+   set CUDA_VISIBLE_DEVICES=0,1,2,3 & ^
+   python -m torch.distributed.launch ^
+   --nproc_per_node=1 ^
+   --nnodes=1 ^
+   --node_rank=0 ^
+   --master_addr=localhost ^
+   --master_port=12345 ^
+   DDP_use_launch.py
+   ```
 
 ## 贡献
 
