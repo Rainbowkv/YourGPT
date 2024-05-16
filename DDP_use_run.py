@@ -73,15 +73,15 @@ input_sequence = torch.tensor(encoder(data), dtype=torch.long)
 n = int(0.9 * len(input_sequence))
 train_data = input_sequence[:n]
 val_data = input_sequence[n:]
-train_data = TrainDataSet(train_data, model.ModelStruct.block_size)
-train_sampler = DistributedSampler(train_data)
-train_loader = torch.utils.data.DataLoader(train_data, sampler=train_sampler, batch_size=TrainConfig.batch_size)
+train_dataset = TrainDataSet(train_data, model.ModelStruct.block_size)
+train_sampler = DistributedSampler(train_dataset)
+train_loader = torch.utils.data.DataLoader(train_dataset, sampler=train_sampler, batch_size=TrainConfig.batch_size)
 # 计算参数数量
 if local_rank == 0:
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"模型参数量：{total_params}.")
 
-model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], output_device=local_rank,
+ddp_model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], output_device=local_rank,
                                                   find_unused_parameters=True)
 
 total_batches = len(train_loader)
@@ -92,17 +92,17 @@ for cur_epoch in range(TrainConfig.epoch):
         # forward
         inputs = inputs.to(device)
         labels = labels.to(device)
-        _, loss = model(inputs, labels)
+        _, loss = ddp_model(inputs, labels)
         # backward
         loss.backward()
         optimizer.step()
         optimizer.zero_grad(set_to_none=True)
         # log
         if local_rank == 0 and i % TrainConfig.eval_interval == 0:
-            all_loss = estimate_loss(train_data.data, val_data, model.module, TrainConfig)
+            all_loss = estimate_loss(train_dataset.data, val_data, ddp_model.module, TrainConfig)
             print(f"train_loss = {all_loss[0]}, val_loss = {all_loss[1]}, cur_epoch = {cur_epoch + i / total_batches}")
 
 if local_rank == 0:
     # 仅保存模型参数
-    torch.save(model.module.state_dict(),"checkpoint/" + datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + f"-params-{total_params}" + ".pth")
+    torch.save(ddp_model.module.state_dict(),"checkpoint/" + datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + f"-params-{total_params}" + ".pth")
     print(f"模型保存成功.")
