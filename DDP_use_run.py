@@ -1,4 +1,3 @@
-# import argparse
 import os
 import random
 from dataclasses import dataclass
@@ -32,9 +31,6 @@ class TrainConfig(nn.Module):
     max_tokens = 500
 
 
-# parser = argparse.ArgumentParser()
-# parser.add_argument("--local-rank", type=int, default=-1)
-# args = parser.parse_args()
 local_rank = int(os.getenv("LOCAL_RANK"))
 torch.cuda.set_device(local_rank)
 device = torch.device('cuda', local_rank)
@@ -106,3 +102,5 @@ if local_rank == 0:
     # 仅保存模型参数
     torch.save(ddp_model.module.state_dict(),"checkpoint/" + datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + f"-params-{total_params}" + ".pth")
     print(f"模型保存成功.")
+
+torch.distributed.destroy_process_group()  # 清理，良好编程习惯。
