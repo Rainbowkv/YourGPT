@@ -21,12 +21,13 @@ class TrainConfig(nn.Module):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     vocab_size = 65
     # 训练设置
+    epoch = 2
     train_data_proportion = 0.9
     batch_size = 64
     iterations = 5000
     learning_rate = 3e-4
-    eval_interval = 500
-    eval_iters = 200
+    eval_interval = 500  # 每500次训练评估一次当前的模型
+    eval_iters = 200  # 评估时会取200个样本的loss平均值
     max_tokens = 500
 
 
@@ -69,32 +70,36 @@ encoder = lambda s: [s2i[c] for c in s]
 decoder = lambda nums: "".join([i2s[num] for num in nums])
 input_sequence = torch.tensor(encoder(data), dtype=torch.long)
 n = int(0.9 * len(input_sequence))
-
-train_data = TrainDataSet(input_sequence[:n], model.ModelStruct.block_size)
+train_data = input_sequence[:n]
+val_data = input_sequence[n:]
+train_data = TrainDataSet(train_data, model.ModelStruct.block_size)
 train_sampler = DistributedSampler(train_data)
 train_loader = torch.utils.data.DataLoader(train_data, sampler=train_sampler, batch_size=TrainConfig.batch_size)
 # 计算参数数量
-total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-print(f"模型参数量：{total_params}.")
+if args.local_rank == 0:
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"模型参数量：{total_params}.")
 
 model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank], output_device=args.local_rank,
                                                   find_unused_parameters=True)
 
 total_batches = len(train_loader)
 # training!
-for i, data in tqdm(enumerate(train_loader), total=total_batches, desc="Training"):
-    inputs, labels = data
-    # forward
-    inputs = inputs.to(device)
-    labels = labels.to(device)
-    _, loss = model(inputs, labels)
-    # backward
-    loss.backward()
-    optimizer.step()
-    optimizer.zero_grad(set_to_none=True)
-    # log
-    if args.local_rank == 0 and i % 100 == 0:
-        print(f"loss = {loss}")
+for cur_epoch in range(TrainConfig.epoch):
+    for i, data in tqdm(enumerate(train_loader), total=total_batches, desc="Training"):
+        inputs, labels = data
+        # forward
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+        _, loss = model(inputs, labels)
+        # backward
+        loss.backward()
+        optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        # log
+        if args.local_rank == 0 and i % TrainConfig.eval_interval == 0:
+            all_loss = estimate_loss(train_data.data, val_data, model.module, TrainConfig)
+            print(f"train_loss = {all_loss[0]}, val_loss = {all_loss[1]}, cur_epoch = {cur_epoch + i / total_batches}")
 
 if args.local_rank == 0:
     # 仅保存模型参数
