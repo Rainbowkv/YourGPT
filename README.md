@@ -14,7 +14,7 @@
    - [训练自己的gpt](#1-训练自己的gpt)
    - [体验预训练模型推理](#2-体验预训练模型推理)
    - [计算模型参数](#3-计算模型参数)
-   - [ddp多卡训练](#4-ddp多卡训练)
+   - [ddp单机多卡训练](#4-ddp单机多卡训练)
 - [贡献](#贡献)
 - [许可证](#许可证)
 - [致谢](#致谢)
@@ -110,29 +110,29 @@
 
    [penetrateModel.py](https://github.com/Rainbowkv/YourGPT/blob/main/penetrateModel.py)可以用来观察模型的结构，结合[手算模型参数量.txt](https://github.com/Rainbowkv/YourGPT/blob/main/手算模型参数量.txt)这个文件，您可以对模型的细节更加清晰。
 
-### 4. **DDP多卡训练：**
+### 4. **DDP单机多卡训练：**
 
    linux下执行命令示例：
    ```
-   CUDA_VISIBLE_DEVICES=3,4,5,6 python -m torch.distributed.launch \
+   CUDA_VISIBLE_DEVICES=3,4,5,6 python -m torch.distributed.run \
    --nproc_per_node=4 \
    --nnodes=1 \
    --node_rank=0 \
    --master_addr=localhost \
    --master_port=12345 \
-   DDP_use_launch.py
+   DDP_use_run.py
    ```
 
    windows下执行命令示例：
    ```
    set CUDA_VISIBLE_DEVICES=0,1,2,3 & ^
-   python -m torch.distributed.launch ^
+   python -m torch.distributed.run ^
    --nproc_per_node=1 ^
    --nnodes=1 ^
    --node_rank=0 ^
    --master_addr=localhost ^
    --master_port=12345 ^
-   DDP_use_launch.py
+   DDP_use_run.py
    ```
 
 ## 贡献

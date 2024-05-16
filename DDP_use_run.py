@@ -1,4 +1,5 @@
-import argparse
+# import argparse
+import os
 import random
 from dataclasses import dataclass
 import numpy as np
@@ -31,12 +32,12 @@ class TrainConfig(nn.Module):
     max_tokens = 500
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--local-rank", type=int, default=-1)
-args = parser.parse_args()
-
-torch.cuda.set_device(args.local_rank)
-device = torch.device('cuda', args.local_rank)
+# parser = argparse.ArgumentParser()
+# parser.add_argument("--local-rank", type=int, default=-1)
+# args = parser.parse_args()
+local_rank = int(os.getenv("LOCAL_RANK"))
+torch.cuda.set_device(local_rank)
+device = torch.device('cuda', local_rank)
 
 if platform.system() == 'Linux':
     backend='nccl'  # Linux系统使用NCCL
@@ -76,11 +77,11 @@ train_data = TrainDataSet(train_data, model.ModelStruct.block_size)
 train_sampler = DistributedSampler(train_data)
 train_loader = torch.utils.data.DataLoader(train_data, sampler=train_sampler, batch_size=TrainConfig.batch_size)
 # 计算参数数量
-if args.local_rank == 0:
+if local_rank == 0:
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"模型参数量：{total_params}.")
 
-model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank], output_device=args.local_rank,
+model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], output_device=local_rank,
                                                   find_unused_parameters=True)
 
 total_batches = len(train_loader)
@@ -97,11 +98,11 @@ for cur_epoch in range(TrainConfig.epoch):
         optimizer.step()
         optimizer.zero_grad(set_to_none=True)
         # log
-        if args.local_rank == 0 and i % TrainConfig.eval_interval == 0:
+        if local_rank == 0 and i % TrainConfig.eval_interval == 0:
             all_loss = estimate_loss(train_data.data, val_data, model.module, TrainConfig)
             print(f"train_loss = {all_loss[0]}, val_loss = {all_loss[1]}, cur_epoch = {cur_epoch + i / total_batches}")
 
-if args.local_rank == 0:
+if local_rank == 0:
     # 仅保存模型参数
     torch.save(model.module.state_dict(),"checkpoint/" + datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + f"-params-{total_params}" + ".pth")
     print(f"模型保存成功.")
