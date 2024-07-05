@@ -5,6 +5,7 @@ from torch.nn import functional as F
 import time
 from tqdm import tqdm
 
+
 # 训练、评估、预测设置
 device = "cuda" if torch.cuda.is_available() else "cpu"
 torch.manual_seed(1337)

@@ -1,5 +1,5 @@
 # YourGPT
-![封面图片](https://github.com/Rainbowkv/YourGPT/blob/main/images/Demo.png)
+![封面图片](https://github.com/Rainbowkv/YourGPT/blob/main/images/Demo.gif)
 
 &emsp;&emsp;欢迎来到YourGPT，这是一个为大语言模型学习者设计的项目，通过实践帮助您从零开始使用PyTorch构建自己的GPT模型。本项目的目标是完成大语言模型预训练阶段，您将会完整地进行大模型的构建、训练、预测和评估过程。
 
